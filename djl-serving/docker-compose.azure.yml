@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  web-service:
+    image: kohleivo/djl-serving-consumer:latest
+    restart: always
+    environment:
+      - DJL_SERVING_MODEL_NAME=traced_resnet18
+    ports:
+      - "80:8082"
+
+  model-service:
+    image: kohleivo/djl-serving:latest
+    restart: always
+    environment:
+      - SERVING_RESERVED_MEMORY_MB=64
+      - SERVING_REQUIRED_MEMORY_MB=64
+      - SERVING_MIN_WORKERS=1
+      - SERVING_MAX_WORKERS=1
+      - OMP_NUM_THREADS=1
+      - MKL_NUM_THREADS=1
+      - JAVA_OPTS=-Xms64m -Xmx256m -XX:MaxMetaspaceSize=96m

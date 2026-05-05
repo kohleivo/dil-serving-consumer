@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -19,6 +20,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RestController
 public class ConsumerController {
 
+    @Value("${djl.serving.model-name:restnet18}")
+    private String modelName;
+
     @GetMapping("/ping")
     public String ping() {
         return "DJL Consumer app is up and running!";
@@ -28,9 +32,9 @@ public class ConsumerController {
     public ResponseEntity<String> predict(@RequestParam("image") MultipartFile image) throws Exception {
         InputStream is = new ByteArrayInputStream(image.getBytes());
 
-        var uri = "http://localhost:8080/predictions/traced_resnet18";
+        var uri = "http://localhost:8080/predictions/" + modelName;
         if (this.isDockerized()) {
-            uri = "http://model-service:8080/predictions/traced_resnet18";
+            uri = "http://model-service:8080/predictions/" + modelName;
         }
 
         var webClient = WebClient.create();

@@ -1,5 +1,5 @@
-# docker build -t mosazhaw/djl-serving-consumer .
-# docker push mosazhaw/djl-serving-consumer
+# docker build -t kohleivo/djl-serving-consumer .
+# docker push kohleivo/djl-serving-consumer
 
 FROM eclipse-temurin:25-jdk-noble
 

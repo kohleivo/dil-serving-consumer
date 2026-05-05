@@ -1,18 +1,27 @@
 services:
-   web-service:
-     depends_on:
-       - model-service
-     # use a tag if caching problems on azure occur with the latest tag  
-     image: mosazhaw/djl-serving-consumer:latest
-     ports:
-       - "80:8082"
-     restart: always
+  web-service:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    depends_on:
+      - model-service
+    image: kohleivo/djl-serving-consumer:latest
+    ports:
+      - "80:8082"
+    restart: always
+    environment:
+      - DJL_SERVING_MODEL_NAME=traced_resnet18
 
-   model-service:
-     # use a tag if caching problems on azure occur with the latest tag  
-     image: mosazhaw/djl-serving:latest
-     restart: always
-     environment:
+  model-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kohleivo/djl-serving:latest
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
       - SERVING_RESERVED_MEMORY_MB=64
       - SERVING_REQUIRED_MEMORY_MB=64
       - SERVING_MIN_WORKERS=1
